@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/WebPage">
+  <head>
+    
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+  <title>Word2Vec Model - Tianqi</title>
+  <meta name="description" content="An Not-So-Gentle Introduction to Word2Vec Model">
+  <meta name="author" content="Tianqi"/><script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "name": "Tianqi",
+    
+    "url": "https:\/\/Timothy802.github.io\/"
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "name": "",
+  "url": "https:\/\/Timothy802.github.io\/"
+  
+  
+  
+  
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "item": {
+          "@id": "https:\/\/Timothy802.github.io\/",
+          "name": "home"
+        }
+    },{
+        "@type": "ListItem",
+        "position": 3,
+        "item": {
+          "@id": "https:\/\/Timothy802.github.io\/post\/2020-12-21-word2vec-model\/",
+          "name": "Word2 vec model"
+        }
+    }]
+}
+</script><script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "Article",
+  "author": {
+    "name" : "Tianqi"
+  },
+  "headline": "Word2Vec Model",
+  "description" : "Introduction Word2Vec was introduced by a team of researchers at Google in 2013, which is one of the most widely used neural network language models.\nThe underlying assumption of Word2Vec is that two words sharing similar contexts also share a similar meaning (Distributional Hypothesis) and consequently a similar vector representation from the model. For instance, \u0026ldquo;dog\u0026rdquo;, \u0026ldquo;puppy\u0026rdquo; and \u0026ldquo;pup\u0026rdquo; are often used in similar situations, with similar surrounding words like \u0026ldquo;good\u0026rdquo;, \u0026ldquo;fluffy\u0026rdquo; or \u0026ldquo;cute\u0026rdquo;, and according to Word2Vec they will therefore share a similar vector representation.",
+  "inLanguage" : "en",
+  "wordCount":  1731 ,
+  "datePublished" : "2020-12-21T00:00:00",
+  "dateModified" : "2020-12-21T00:00:00",
+  "image" : "https:\/\/Timothy802.github.io\/img\/profile.jpg",
+  "keywords" : [ "nlp, computational modeling" ],
+  "mainEntityOfPage" : "https:\/\/Timothy802.github.io\/post\/2020-12-21-word2vec-model\/",
+  "publisher" : {
+    "@type": "Organization",
+    "name" : "https:\/\/Timothy802.github.io\/",
+    "logo" : {
+        "@type" : "ImageObject",
+        "url" : "https:\/\/Timothy802.github.io\/img\/profile.jpg",
+        "height" :  60 ,
+        "width" :  60
+    }
+  }
+}
+</script>
+
+<meta property="og:title" content="Word2Vec Model" />
+<meta property="og:description" content="An Not-So-Gentle Introduction to Word2Vec Model">
+<meta property="og:image" content="https://Timothy802.github.io/img/profile.jpg" />
+<meta property="og:url" content="https://Timothy802.github.io/post/2020-12-21-word2vec-model/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Tianqi" />
+
+  <meta name="twitter:title" content="Word2Vec Model" />
+  <meta name="twitter:description" content="An Not-So-Gentle Introduction to Word2Vec Model">
+  <meta name="twitter:image" content="https://Timothy802.github.io/img/profile.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:site" content="@username" />
+  <meta name="twitter:creator" content="@username" />
+  <link href='https://Timothy802.github.io/img/profile.ico' rel='icon' type='image/x-icon'/>
+  <meta name="generator" content="Hugo 0.79.0" />
+  <link rel="alternate" href="https://Timothy802.github.io/index.xml" type="application/rss+xml" title="Tianqi"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><link rel="stylesheet" href="https://Timothy802.github.io/css/main.css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" />
+  <link rel="stylesheet" href="https://Timothy802.github.io/css/highlight.min.css" /><link rel="stylesheet" href="https://Timothy802.github.io/css/codeblock.css" /><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.css" integrity="sha384-h/L2W9KefUClHWaty3SLE5F/qvc4djlyR4qY3NUV5HGQBBW7stbcfff1+I/vmsHh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/default-skin/default-skin.min.css" integrity="sha384-iD0dNku6PYSIQLyfTOpB06F2KCZJAKLOThS5HRe8b3ibhdEQ6eKsFf/EeFxdOt5R" crossorigin="anonymous">
+
+
+
+
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top navbar-custom">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#main-navbar">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="https://Timothy802.github.io/">Tianqi</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="main-navbar">
+      <ul class="nav navbar-nav navbar-right">
+        
+          
+            <li>
+              <a title="Posts" href="https://Timothy802.github.io/">Posts</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="About" href="https://Timothy802.github.io/page/about/">About</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Publications" href="https://Timothy802.github.io/page/publications">Publications</a>
+            </li>
+          
+        
+          
+            <li>
+              <a title="Tags" href="https://Timothy802.github.io/tags">Tags</a>
+            </li>
+          
+        
+
+        
+
+        
+      </ul>
+    </div>
+
+    
+      <div class="avatar-container">
+        <div class="avatar-img-border">
+          <a title="Tianqi" href="https://Timothy802.github.io/">
+            <img class="avatar-img" src="https://Timothy802.github.io/img/profile.jpg" alt="Tianqi" />
+          </a>
+        </div>
+      </div>
+    
+
+  </div>
+</nav>
+
+
+
+
+    
+
+
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+<div class="pswp__bg"></div>
+
+<div class="pswp__scroll-wrap">
+    
+    <div class="pswp__container">
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+      <div class="pswp__item"></div>
+    </div>
+    
+    <div class="pswp__ui pswp__ui--hidden">
+    <div class="pswp__top-bar">
+      
+      <div class="pswp__counter"></div>
+      <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+      <button class="pswp__button pswp__button--share" title="Share"></button>
+      <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+      <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+      
+      
+      <div class="pswp__preloader">
+        <div class="pswp__preloader__icn">
+          <div class="pswp__preloader__cut">
+            <div class="pswp__preloader__donut"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+      <div class="pswp__share-tooltip"></div>
+    </div>
+    <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+    </button>
+    <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+    </button>
+    <div class="pswp__caption">
+      <div class="pswp__caption__center"></div>
+    </div>
+    </div>
+    </div>
+</div>
+
+
+  
+  
+  
+
+
+
+
+
+
+  
+
+  <header class="header-section ">
+    
+    <div class="intro-header no-img">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-heading">
+              
+                <h1>Word2Vec Model</h1>
+              
+              
+              
+                
+                  <h2 class="post-subheading">An Not-So-Gentle Introduction to Word2Vec Model</h2>
+                
+              
+              
+                <span class="post-meta">
+  
+  
+  <i class="fas fa-calendar"></i>&nbsp;
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-clock"></i>&nbsp;9&nbsp;minutes
+  
+  
+    &nbsp;|&nbsp;<i class="fas fa-book"></i>&nbsp;1731&nbsp;words
+  
+  
+    
+      &nbsp;|&nbsp;<i class="fas fa-user"></i>&nbsp;Tianqi
+    
+  
+  
+</span>
+
+
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+    
+<div class="container" role="main">
+  <div class="row">
+    <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+      <article role="main" class="blog-post">
+        <p><img src="https://Timothy802.github.io/figures/Word2Vec/word2vec_head.png" alt=""></p>
+<h3 id="introduction">Introduction</h3>
+<p>Word2Vec was introduced by a team of researchers at Google in <a href="https://arxiv.org/abs/1301.3781">2013</a>, which is one of the most widely used neural network language models.</p>
+<p>The underlying assumption of Word2Vec is that two words sharing <em><strong>similar contexts</strong></em> also share a <strong><em>similar meaning</em></strong> (<a href="https://aclweb.org/aclwiki/Distributional_Hypothesis">Distributional Hypothesis</a>) and consequently a <strong><em>similar vector representation</em></strong> from the model. For instance, &ldquo;dog&rdquo;, &ldquo;puppy&rdquo; and &ldquo;pup&rdquo; are often used in similar situations, with similar surrounding words like &ldquo;good&rdquo;, &ldquo;fluffy&rdquo; or &ldquo;cute&rdquo;, and according to Word2Vec they will therefore share a similar vector representation.</p>
+<p>From this assumption, Word2Vec can be used to find out the relations between words in a dataset, compute the similarity between them, or use the vector representation of those words as input for other applications such as text classification or clustering.</p>
+<h4 id="how-does-word2vec-learn-the-representation-of-a-word">How does Word2Vec learn the representation of a word?</h4>
+<p>The Word2Vec learns the representation of words from sentences. The word we focus on to learn its representation is called <strong><em>center word</em></strong>, and the words around it are called <strong><em>context words</em></strong>. The window size C determines the number of context words which is considered.</p>
+<p>Here, let’s see the algorithm by using an example sentence: <strong>&ldquo;The cute cat jumped over the lazy dog&rdquo;</strong>.</p>
+<ul>
+<li>All of the following figures consider “cat” as the center word.</li>
+<li>According to the window size C, we can see that the number of context words is changed.</li>
+</ul>
+<p><img src="https://Timothy802.github.io/figures/Word2Vec/center_context_word.png" alt=""></p>
+<p>So, in order to learn the representation of a word, we will try to learn the context in which a particular word appears. Now the question is how can we do that?</p>
+<h4 id="main-algorithm">Main algorithm</h4>
+<p>It does so in one of two ways, either using context to predict a target word (a method known as continuous bag of words, or <strong><em>CBOW</em></strong>), or using a word to predict a target context, which is called <strong><em>Skip-gram</em></strong>.</p>
+<p><img src="https://Timothy802.github.io/figures/Word2Vec/CBOW_Skipgram.png" alt=""></p>
+<h4 id="an-intuitive-understanding-of-skip-gram">An intuitive understanding of Skip-gram</h4>
+<p>The ideas behind the two algorithms are quite similar, so I take Skip-gram to illustrate how it works.</p>
+<p>Skip-gram uses the <strong><em>current word</em></strong> to predict its neighbors (i.e., its <strong><em>context</em></strong>). To limit the number of words in each context, let&rsquo;s set the parameter <strong><em>window size</em></strong> to 2. As the window slides against the training text, we create our training samples in our training dataset:</p>
+<p><img src="https://Timothy802.github.io/figures/Word2Vec/generate_train_sample.png" alt=""></p>
+<p>We cannot feed the neural network with inputs of actual characters, so we have to find a way to represent these words. One way to do that is to create a <strong><em>vocabulary</em></strong> of all the words in our text corpus and then to encode our word as a vector of the same dimension of our vocabulary. Each dimension can be thought as a word in our vocabulary. So we will have a vector with all zeros and a 1 which represents the corresponding word in the vocabulary. This encoding technique is called <strong><em>one-hot encoding</em></strong>. Considering our example, suppose our text corpus contains only one sentence made of the words“the”, “cute”, “cat”, “jumped”,“over”, “lazy”, “dog”, we would have the following vector representation:</p>
+<p><img src="https://Timothy802.github.io/figures/Word2Vec/one_hot_encoding.png" alt=""></p>
+<p>Here we have transformed the eight-word sentence into a \( 8 \times 7 \)​ matrix, with the 7 being the size of the vocabulary (“the” is repeated). In the real practice, the size of vocabulary can be very large, which looks like what is shown below:</p>
+<p><img src="https://Timothy802.github.io/figures/Word2Vec/one_hot_encoding_more_real.png" alt=""></p>
+<p>It should be noted that such a word representation is so sparse and tells nothing about the relation between word pairs (as the dot product of each pair of word vector is 0, which produces a cosine distance of 0). Yet, we can use these one-hot encodings to train our model. After that, we will get a more efficient representation of word semantics.</p>
+<p>Now that we have our Skip-gram training dataset that we extracted from existing running text, let’s glance at how we use it to train a basic neural language model that predicts the context word. We start with a sample in our dataset - using the center word <strong><em>cat</em></strong> to predict the context word <strong><em>cute</em></strong>. The training includes the following operations:</p>
+<p><img src="https://Timothy802.github.io/figures/Word2Vec/Skipgram_training.png" alt=""></p>
+<ul>
+<li>First, multiply the one-hot encoding vector \(x\) (\( V \times 1​ \) dimension) and the word embedding matrix ​\(W​\) of size \(V \times N\) (\(V\) is the size of the vocabulary and \(N\) is the dimension of the word embedding; the elements in the matrix \(W\) is initialized with random numbers) gives us the embedding vector of the input word \(w_i\) (i.e., the word <strong><em>cat</em></strong> in our case).</li>
+<li>This newly discovered embedding vector of dimension \(N​\) forms the hidden layer.</li>
+<li>Multiply the hidden layer vector and the word context matrix \(W'​\) of size \(N \times V\) produces the predicted vector of the target word \(\hat{y}\) (i.e., the word <strong><em>cute</em></strong> in our case).</li>
+<li>The predicted vector \(\hat{y}​\) is further compared to the actual target vector \(y\) (of the word <strong><em>cute</em></strong> with one-hot encoding), and the error is used to update the word embedding matrix \(W\) using back-propagation. The next time the model get <strong><em>cat</em></strong> as the input, it is more likely to guess <strong><em>cute</em></strong>.</li>
+<li><strong>Note:</strong> the above process can be computationally intensive. To improve the performance, the technique of <a href="http://jalammar.github.io/illustrated-word2vec/">negtive-sampling</a> is applied.</li>
+</ul>
+<p>The above operations conclude the first step of the training. We proceed to do the same process with the next sample in our dataset, and then the next, until we have covered all the samples in the dataset. That concludes one <strong><em>epoch</em></strong> of training. We do it over again for a number of epochs, and then we have the so called Word2Vec model.</p>
+<p>The by-product of the model - <strong><em>the embedding matrix</em></strong> - is extremely useful, as the weights are constantly adjusted during the whole process of training. Therefore, it can be used to represent the relations between words.</p>
+<p>We will soon show the magical word embeddings in our demo!</p>
+<h3 id="word2vec-demo">Word2Vec Demo</h3>
+<h4 id="python-implementation">Python implementation</h4>
+<p>For training and evaluating, we use <a href="https://radimrehurek.com/gensim/auto_examples/index.html#documentation">Gensim</a>, a python package for language modeling which started with topic models (LDA) and grew into neural word representations (Word2Vec, GloVe).</p>
+<h4 id="training-the-word2vec-model">Training the Word2Vec model</h4>
+<p>Here, we use the Word2Vec model downloaded from the <a href="https://github.com/wavewangyue/text-classification">text-classification</a> project, which was trained on a large Chinese corpus (Baidu Baike). The current word2vec model contains 209969 word vectors with 200 dimensions.</p>
+<h4 id="loading-the-model">Loading the model</h4>
+<p>The following code is used to load the model and store the word vectors in a dictionary.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="nn">gensim</span>
+<span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">join</span>
+
+<span class="c1"># directory path and model</span>
+<span class="n">dir_path</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">baike.vectors&#39;</span>
+<span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;baike.vectors.bin&#39;</span>
+
+<span class="c1"># load model</span>
+<span class="n">w2v_model</span> <span class="o">=</span> <span class="n">gensim</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">KeyedVectors</span><span class="o">.</span><span class="n">load_word2vec_format</span><span class="p">(</span><span class="n">join</span><span class="p">(</span><span class="n">dir_path</span><span class="p">,</span> <span class="n">file_name</span><span class="p">),</span> <span class="n">binary</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+    
+<span class="c1"># get dictionary</span>
+<span class="n">vocab_dic</span> <span class="o">=</span> <span class="n">w2v_model</span><span class="o">.</span><span class="n">wv</span><span class="o">.</span><span class="n">vocab</span>
+
+<span class="c1"># get vocabulary</span>
+<span class="n">vocab_ls</span> <span class="o">=</span> <span class="n">vocab_dic</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+
+<span class="c1"># number of vocabularies in the dictionary</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;There are </span><span class="si">%s</span><span class="s1"> vocabularies in the dictionary.&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vocab_ls</span><span class="p">)))</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">There are 209969 vocabularies in the dictionary.
+</code></pre></div><h4 id="playing-around-with-the-pre-trained-model">Playing around with the pre-trained model</h4>
+<p>First, let&rsquo;s <em>obtain the vectors</em> for terms, as it is the most basic operation.</p>
+<p>It should be noted that:</p>
+<ul>
+<li>We can only obtain vectors for terms the model is familiar with (i.e., words in the dictionary). For unknown words, the model is unable to infer their vectors.</li>
+<li>Alternatively, <a href="https://radimrehurek.com/gensim/auto_examples/tutorials/run_fasttext.html#sphx-glr-auto-examples-tutorials-run-fasttext-py">FastText</a> model can be used to obtain the vectors of unknown words.</li>
+</ul>
+<p>For example, we would like to obtain the vector (200 dimensions) for the term &ldquo;苹果&rdquo;.</p>
+<div class="highlight"><pre class="chroma"><code class="language-Python" data-lang="Python"><span class="n">w2v_model</span><span class="p">[</span><span class="s1">&#39;苹果&#39;</span><span class="p">]</span>
+</code></pre></div><p>Moving on, Word2Vec supports several word similarity tasks. Typically, the <strong><em>cosine similarity</em></strong> is used as the metric:
+$$
+Cosine \ Similarity = \frac{U^TV}{\left|U\right|\left|V\right|}
+$$
+<img src="https://Timothy802.github.io/figures/Word2Vec/cosine_similarity.png" alt=""></p>
+<p>Let&rsquo;s see how the similarity intuitively decreases as the words get less and less similar.</p>
+<div class="highlight"><pre class="chroma"><code class="language-Python" data-lang="Python"><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+
+<span class="n">pairs</span> <span class="o">=</span> <span class="p">[(</span><span class="s1">&#39;汽车&#39;</span><span class="p">,</span> <span class="s1">&#39;货车&#39;</span><span class="p">),</span>      <span class="c1"># a minivan is a kind of vehicle</span>
+         <span class="p">(</span><span class="s1">&#39;汽车&#39;</span><span class="p">,</span> <span class="s1">&#39;自行车&#39;</span><span class="p">),</span>    <span class="c1"># a bicycle is a wheeled vehicle</span>
+         <span class="p">(</span><span class="s1">&#39;汽车&#39;</span><span class="p">,</span> <span class="s1">&#39;船&#39;</span><span class="p">),</span>        <span class="c1"># a boat has no wheels, but still a vehicle</span>
+         <span class="p">(</span><span class="s1">&#39;汽车&#39;</span><span class="p">,</span> <span class="s1">&#39;谷物&#39;</span><span class="p">),</span>      <span class="c1"># cereal is a kind of food</span>
+         <span class="p">(</span><span class="s1">&#39;汽车&#39;</span><span class="p">,</span> <span class="s1">&#39;共产主义&#39;</span><span class="p">)]</span>  <span class="c1"># communism is a political belief</span>
+
+<span class="n">df_ls</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">w1</span><span class="p">,</span> <span class="n">w2</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">:</span>
+    <span class="n">df_ls</span> <span class="o">+=</span> <span class="p">[[</span><span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">w2v_model</span><span class="o">.</span><span class="n">similarity</span><span class="p">(</span><span class="n">w1</span><span class="p">,</span> <span class="n">w2</span><span class="p">)]]</span>
+    
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df_ls</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Word 1&#39;</span><span class="p">,</span> <span class="s1">&#39;Word 2&#39;</span><span class="p">,</span> <span class="s1">&#39;Similarity&#39;</span><span class="p">])</span>
+</code></pre></div><table>
+<thead>
+<tr>
+<th style="text-align:left">Word 1</th>
+<th style="text-align:left">Word 2</th>
+<th style="text-align:left">Similarity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">汽车</td>
+<td style="text-align:left">货车</td>
+<td style="text-align:left">0.526</td>
+</tr>
+<tr>
+<td style="text-align:left">汽车</td>
+<td style="text-align:left">自行车</td>
+<td style="text-align:left">0.533</td>
+</tr>
+<tr>
+<td style="text-align:left">汽车</td>
+<td style="text-align:left">船</td>
+<td style="text-align:left">0.157</td>
+</tr>
+<tr>
+<td style="text-align:left">汽车</td>
+<td style="text-align:left">谷物</td>
+<td style="text-align:left">0.102</td>
+</tr>
+<tr>
+<td style="text-align:left">汽车</td>
+<td style="text-align:left">共产主义</td>
+<td style="text-align:left">0.061</td>
+</tr>
+</tbody>
+</table>
+<p>We can print the 5 most similar words to &ldquo;香港大学&rdquo;.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">top_similar</span> <span class="o">=</span> <span class="n">w2v_model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">([</span><span class="s1">&#39;香港大学&#39;</span><span class="p">],</span> <span class="n">topn</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># formatting</span>
+<span class="n">top_similar_ls</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">top_similar</span><span class="p">)):</span>
+    <span class="n">top_similar_ls</span> <span class="o">+=</span> <span class="p">[[</span><span class="n">top_similar</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;</span><span class="si">%.3f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">top_similar</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]]]</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">top_similar_ls</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Similar Word&#39;</span><span class="p">,</span> <span class="s1">&#39;Similarity&#39;</span><span class="p">])</span>
+</code></pre></div><table>
+<thead>
+<tr>
+<th style="text-align:left">Similar Word</th>
+<th style="text-align:left">Similarity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">香港中文大学</td>
+<td style="text-align:left">0.912</td>
+</tr>
+<tr>
+<td style="text-align:left">美国哥伦比亚大学</td>
+<td style="text-align:left">0.825</td>
+</tr>
+<tr>
+<td style="text-align:left">新加坡国立大学</td>
+<td style="text-align:left">0.824</td>
+</tr>
+<tr>
+<td style="text-align:left">香港浸会大学</td>
+<td style="text-align:left">0.794</td>
+</tr>
+<tr>
+<td style="text-align:left">加拿大多伦多大学</td>
+<td style="text-align:left">0.792</td>
+</tr>
+</tbody>
+</table>
+<p>The model can also detect words that do not belong to a certain semantic category. For example, we have a sequence of words {中国, 美国, 苹果, 英国, 日本}, and based on the model&rsquo;s prediction, &ldquo;苹果&rdquo; does not belong to the category of <em>country</em>.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="n">w2v_model</span><span class="o">.</span><span class="n">doesnt_match</span><span class="p">(</span><span class="s1">&#39;中国 美国 苹果 英国 日本&#39;</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">&#39;苹果&#39;
+</code></pre></div><p>The model can even do some analogical inference on relations (A is to B as C is to ?). The most well known example is the &ldquo;<em>Man</em> is to <em>King</em> as <em>Woman</em> is to <em>Queen</em>&rdquo; analogy, which can be represented as $King - Man + Woman = Queen$.</p>
+<p><img src="https://Timothy802.github.io/figures/Word2Vec/king-man+woman.jpg" alt=""></p>
+<p><img src="https://Timothy802.github.io/figures/Word2Vec/analogy.png" alt=""></p>
+<p>Now, let&rsquo;s have a try using our model.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">analogy</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y1</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">w2v_model</span><span class="o">.</span><span class="n">most_similar</span><span class="p">(</span><span class="n">positive</span><span class="o">=</span><span class="p">[</span><span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">],</span> <span class="n">negative</span><span class="o">=</span><span class="p">[</span><span class="n">x1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;国王 - 男人 + 女人 = </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">analogy</span><span class="p">(</span><span class="s1">&#39;男人&#39;</span><span class="p">,</span> <span class="s1">&#39;女人&#39;</span><span class="p">,</span> <span class="s1">&#39;国王&#39;</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s1">&#39;中国 - 北京 + 东京 = </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">analogy</span><span class="p">(</span><span class="s1">&#39;北京&#39;</span><span class="p">,</span> <span class="s1">&#39;东京&#39;</span><span class="p">,</span> <span class="s1">&#39;中国&#39;</span><span class="p">))</span>
+</code></pre></div><div class="highlight"><pre class="chroma"><code class="language-fallback" data-lang="fallback">国王 - 男人 + 女人 = 王后
+中国 - 北京 + 东京 = 日本
+</code></pre></div><p>Finally, we can visualize word vectors in the semantic space. To project the high-dimensional word embeddings to a 2D space, we can reduce dimensionality using PCA and t-SNE, which obtains lower-dimensional data while preserving as much of the data&rsquo;s variation as possible. Both methods are implemented in the machine learning package <a href="https://scikit-learn.org/stable/index.html">sciket-learn</a>.</p>
+<div class="highlight"><pre class="chroma"><code class="language-python" data-lang="python"><span class="c1"># scikit-learn: reduce dimensionality</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+
+<span class="c1"># matplotlib: interactive plot</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">notebook</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;ggplot&#39;</span><span class="p">)</span>
+
+<span class="c1"># show font in Chinese</span>
+<span class="kn">from</span> <span class="nn">pylab</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.sans-serif&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SimHei&#39;</span><span class="p">]</span>
+
+<span class="c1"># display PCA-based 2D scatterplot</span>
+<span class="k">def</span> <span class="nf">display_pca_scatterplot</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">words</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">sample</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    
+    <span class="k">if</span> <span class="n">words</span> <span class="o">==</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">sample</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">words</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">vocab</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">sample</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">words</span> <span class="o">=</span> <span class="p">[</span><span class="n">word</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">vocab</span><span class="p">]</span>
+        
+    <span class="n">word_vectors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">model</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">words</span><span class="p">])</span>
+    <span class="n">two_dim</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">()</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">word_vectors</span><span class="p">)[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+    
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">dpi</span> <span class="o">=</span> <span class="mi">300</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">two_dim</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">two_dim</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">edgecolors</span> <span class="o">=</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">word</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">words</span><span class="p">,</span> <span class="n">two_dim</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">word</span><span class="p">)</span>
+        
+        
+<span class="c1"># words to plot</span>
+<span class="n">word_plot</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;中国&#39;</span><span class="p">,</span> <span class="s1">&#39;日本&#39;</span><span class="p">,</span> <span class="s1">&#39;英国&#39;</span><span class="p">,</span> <span class="s1">&#39;美国&#39;</span><span class="p">,</span> <span class="s1">&#39;印度&#39;</span><span class="p">,</span> <span class="s1">&#39;意大利&#39;</span><span class="p">,</span> <span class="s1">&#39;西班牙&#39;</span><span class="p">,</span> <span class="s1">&#39;新加坡&#39;</span><span class="p">,</span> <span class="s1">&#39;菲律宾&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;苹果&#39;</span><span class="p">,</span> <span class="s1">&#39;香蕉&#39;</span><span class="p">,</span> <span class="s1">&#39;西瓜&#39;</span><span class="p">,</span> <span class="s1">&#39;草莓&#39;</span><span class="p">,</span> <span class="s1">&#39;葡萄&#39;</span><span class="p">,</span> <span class="s1">&#39;哈密瓜&#39;</span><span class="p">,</span> <span class="s1">&#39;火龙果&#39;</span><span class="p">,</span> <span class="s1">&#39;奇异果&#39;</span><span class="p">,</span> <span class="s1">&#39;车厘子&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;老虎&#39;</span><span class="p">,</span> <span class="s1">&#39;狮子&#39;</span><span class="p">,</span> <span class="s1">&#39;大象&#39;</span><span class="p">,</span> <span class="s1">&#39;青蛙&#39;</span><span class="p">,</span> <span class="s1">&#39;绵羊&#39;</span><span class="p">,</span> <span class="s1">&#39;长颈鹿&#39;</span><span class="p">,</span> <span class="s1">&#39;藏羚羊&#39;</span><span class="p">,</span> <span class="s1">&#39;梅花鹿&#39;</span><span class="p">,</span> <span class="s1">&#39;猫头鹰&#39;</span><span class="p">]</span> 
+
+<span class="n">display_pca_scatterplot</span><span class="p">(</span><span class="n">w2v_model</span><span class="p">,</span> <span class="n">word_plot</span><span class="p">)</span>
+</code></pre></div><p><img src="https://Timothy802.github.io/figures/Word2Vec/pca_plot.png" alt=""></p>
+<h3 id="references">References</h3>
+<ul>
+<li><a href="http://web.stanford.edu/class/cs224n/">Stanford CS224n: Natural Language Processing with Deep Learning</a></li>
+<li><a href="http://jalammar.github.io/illustrated-word2vec/">The illustrated Word2Vec</a></li>
+<li><a href="https://aegis4048.github.io/demystifying_neural_network_in_skip_gram_language_modeling">Demystifying Neural Network in Skip-Gram Language Modeling</a></li>
+<li><a href="https://radimrehurek.com/gensim/auto_examples/tutorials/run_word2vec.html#evaluating">gensim documentation</a></li>
+</ul>
+
+
+        
+          <div class="blog-tags">
+            
+              <a href="https://Timothy802.github.io//tags/nlp/">nlp</a>&nbsp;
+            
+              <a href="https://Timothy802.github.io//tags/computational-modeling/">computational modeling</a>&nbsp;
+            
+          </div>
+        
+
+        
+            <hr/>
+            <section id="social-share">
+              <div class="list-inline footer-links">
+                
+
+<div class="share-box" aria-hidden="true">
+    <ul class="share">
+      
+      <li>
+        <a href="//twitter.com/share?url=https%3a%2f%2fTimothy802.github.io%2fpost%2f2020-12-21-word2vec-model%2f&amp;text=Word2Vec%20Model&amp;via=username" target="_blank" title="Share on Twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.facebook.com/sharer/sharer.php?u=https%3a%2f%2fTimothy802.github.io%2fpost%2f2020-12-21-word2vec-model%2f" target="_blank" title="Share on Facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//reddit.com/submit?url=https%3a%2f%2fTimothy802.github.io%2fpost%2f2020-12-21-word2vec-model%2f&amp;title=Word2Vec%20Model" target="_blank" title="Share on Reddit">
+          <i class="fab fa-reddit"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.linkedin.com/shareArticle?url=https%3a%2f%2fTimothy802.github.io%2fpost%2f2020-12-21-word2vec-model%2f&amp;title=Word2Vec%20Model" target="_blank" title="Share on LinkedIn">
+          <i class="fab fa-linkedin"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.stumbleupon.com/submit?url=https%3a%2f%2fTimothy802.github.io%2fpost%2f2020-12-21-word2vec-model%2f&amp;title=Word2Vec%20Model" target="_blank" title="Share on StumbleUpon">
+          <i class="fab fa-stumbleupon"></i>
+        </a>
+      </li>
+  
+      
+      <li>
+        <a href="//www.pinterest.com/pin/create/button/?url=https%3a%2f%2fTimothy802.github.io%2fpost%2f2020-12-21-word2vec-model%2f&amp;description=Word2Vec%20Model" target="_blank" title="Share on Pinterest">
+          <i class="fab fa-pinterest"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  
+
+              </div>
+            </section>
+        
+
+        
+          
+
+          
+        
+      </article>
+
+      
+        <ul class="pager blog-pager">
+          
+            <li class="previous">
+              <a href="https://Timothy802.github.io/post/2020-12-20-hk-gallery/" data-toggle="tooltip" data-placement="top" title="Hong Kong Through A Lens">&larr; Previous Post</a>
+            </li>
+          
+          
+            <li class="next">
+              <a href="https://Timothy802.github.io/post/2020-12-21-hku-gallery/" data-toggle="tooltip" data-placement="top" title="Hong Kong U in Pandemics">Next Post &rarr;</a>
+            </li>
+          
+        </ul>
+      
+
+
+      
+        
+        
+      
+
+    </div>
+  </div>
+</div>
+
+      
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <ul class="list-inline text-center footer-links">
+          
+              <li>
+                <a href="mailto:tianqi93@connect.hku.hk" title="Email me">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/username" title="Facebook">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-facebook fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/Timothy802" title="GitHub">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://twitter.com/username" title="Twitter">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://linkedin.com/in/tianqi-wang-05a1231a0" title="LinkedIn">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.instagram.com/username" title="Instagram">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+              <li>
+                <a href="https://www.youtube.com/user/username" title="Youtube">
+                  <span class="fa-stack fa-lg">
+                    <i class="fas fa-circle fa-stack-2x"></i>
+                    <i class="fab fa-youtube fa-stack-1x fa-inverse"></i>
+                  </span>
+                </a>
+              </li>
+          
+          <li>
+            <a href="" title="RSS">
+              <span class="fa-stack fa-lg">
+                <i class="fas fa-circle fa-stack-2x"></i>
+                <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+              </span>
+            </a>
+          </li>
+          
+        </ul>
+        <p class="credits copyright text-muted">
+          
+            
+              <a href="yourwebsite.com">Tianqi</a>
+            
+          
+
+          &nbsp;&bull;&nbsp;&copy;
+          
+            2020
+          
+
+          
+            &nbsp;&bull;&nbsp;
+            <a href="https://Timothy802.github.io/">Tianqi</a>
+          
+        </p>
+        
+        <p class="credits theme-by text-muted">
+          <a href="https://gohugo.io">Hugo v0.79.0</a> powered &nbsp;&bull;&nbsp; Theme <a href="https://github.com/halogenica/beautifulhugo">Beautiful Hugo</a> adapted from <a href="https://deanattali.com/beautiful-jekyll/">Beautiful Jekyll</a>
+          
+        </p>
+      </div>
+    </div>
+  </div>
+</footer><script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.js" integrity="sha384-K3vbOmF2BtaVai+Qk37uypf7VrgBubhQreNQe9aGsz9lB63dIFiQVlJbr92dw2Lx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/contrib/auto-render.min.js" integrity="sha384-kmZOZB5ObwgQnS/DuDg6TScgOiWWBiVt0plIRkZCmE6rDZGrEOQeHM5PcHi+nyqe" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<script src="https://Timothy802.github.io/js/main.js"></script>
+<script src="https://Timothy802.github.io/js/highlight.min.js"></script>
+<script> hljs.initHighlightingOnLoad(); </script>
+<script> $(document).ready(function() {$("pre.chroma").css("padding","0");}); </script><script> renderMathInElement(document.body); </script><script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe.min.js" integrity="sha384-QELNnmcmU8IR9ZAykt67vGr9/rZJdHbiWi64V88fCPaOohUlHCqUD/unNN0BXSqy" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/photoswipe/4.1.2/photoswipe-ui-default.min.js" integrity="sha384-m67o7SkQ1ALzKZIFh4CiTA8tmadaujiTa9Vu+nqPSwDOqHrDmxLezTdFln8077+q" crossorigin="anonymous"></script><script src="https://Timothy802.github.io/js/load-photoswipe.js"></script>
+
+
+
+
+
+
+
+
+
+    
+  </body>
+</html>
+

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Tianqi</title>
+    <link>https://Timothy802.github.io/tags/</link>
+    <description>Recent content in Tags on Tianqi</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <managingEditor>tianqi93@connect.hku.hk (Tianqi)</managingEditor>
+    <webMaster>tianqi93@connect.hku.hk (Tianqi)</webMaster>
+    <lastBuildDate>Mon, 21 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://Timothy802.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>computational modeling</title>
+      <link>https://Timothy802.github.io/tags/computational-modeling/</link>
+      <pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate>
+      <author>tianqi93@connect.hku.hk (Tianqi)</author>
+      <guid>https://Timothy802.github.io/tags/computational-modeling/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hku</title>
+      <link>https://Timothy802.github.io/tags/hku/</link>
+      <pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate>
+      <author>tianqi93@connect.hku.hk (Tianqi)</author>
+      <guid>https://Timothy802.github.io/tags/hku/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nlp</title>
+      <link>https://Timothy802.github.io/tags/nlp/</link>
+      <pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate>
+      <author>tianqi93@connect.hku.hk (Tianqi)</author>
+      <guid>https://Timothy802.github.io/tags/nlp/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>photo</title>
+      <link>https://Timothy802.github.io/tags/photo/</link>
+      <pubDate>Mon, 21 Dec 2020 00:00:00 +0000</pubDate>
+      <author>tianqi93@connect.hku.hk (Tianqi)</author>
+      <guid>https://Timothy802.github.io/tags/photo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hk</title>
+      <link>https://Timothy802.github.io/tags/hk/</link>
+      <pubDate>Sun, 20 Dec 2020 00:00:00 +0000</pubDate>
+      <author>tianqi93@connect.hku.hk (Tianqi)</author>
+      <guid>https://Timothy802.github.io/tags/hk/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

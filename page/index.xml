@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pages on Tianqi</title>
+    <link>https://Timothy802.github.io/page/</link>
+    <description>Recent content in Pages on Tianqi</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <managingEditor>tianqi93@connect.hku.hk (Tianqi)</managingEditor>
+    <webMaster>tianqi93@connect.hku.hk (Tianqi)</webMaster><atom:link href="https://Timothy802.github.io/page/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About me</title>
+      <link>https://Timothy802.github.io/page/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>tianqi93@connect.hku.hk (Tianqi)</author>
+      <guid>https://Timothy802.github.io/page/about/</guid>
+      <description>I am currently a first-year PhD student in the Department of Speech and Hearing Science at The University of Hong Kong. I am working on the psychology of language under the supervision of Dr. Manwa Lawrence Ng and Dr. Xu Xu. In particular, I am using computational models, including machine learning and deep learning, to understand the processing of lexical and semantic representation in both comprehension and production. Prior to my study in HKU, I received graduate training in Shanghai Jiao Tong University, and worked as a research assistant in Shenzhen Institutes of Advanced Technology, Chinese Academy of Sciences.</description>
+    </item>
+    
+    <item>
+      <title>Publications</title>
+      <link>https://Timothy802.github.io/page/publications/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <author>tianqi93@connect.hku.hk (Tianqi)</author>
+      <guid>https://Timothy802.github.io/page/publications/</guid>
+      <description>Conference Paper Wang, T., Lian, C., Pan, J., Yan, Q., Zhu, F., Ng, M., Wang, L., &amp;amp; Yan, N. (2019). Towards the speech features of mild cognitive impairment: Universal evidence from structured and unstructured connected speech of Chinese. Interspeech 2019 (EI) [PDF]
+Wang, T., Yan, Q., Pan, J., Zhu, F., Su, R., Guo, Y., Wang, L., &amp;amp; Yan, N. (2019). Towards the speech features of early-stage dementia: Design and application of the Mandarin elderly cognitive speech database.</description>
+    </item>
+    
+  </channel>
+</rss>
